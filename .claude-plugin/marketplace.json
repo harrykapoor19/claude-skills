@@ -1,0 +1,20 @@
+{
+  "name": "hk-marketplace",
+  "owner": {
+    "name": "Harry Kapoor",
+    "email": "harrykapoor19@gmail.com"
+  },
+  "metadata": {
+    "description": "Agent skills for deep research and creative ideation — built by Harry Kapoor"
+  },
+  "plugins": [
+    {
+      "name": "hk-skills",
+      "source": "./plugins/hk-skills",
+      "description": "Deep research and creative ideation skills for Claude Code and other Agent Skills-compatible tools",
+      "version": "1.0.0",
+      "category": "productivity",
+      "tags": ["research", "creative", "ideation", "deep-research"]
+    }
+  ]
+}

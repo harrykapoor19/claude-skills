@@ -1,0 +1,11 @@
+{
+  "name": "hk-skills",
+  "description": "Deep research and creative ideation skills — multi-source iterative research with adversarial synthesis, and a trisociation-based creative engine",
+  "version": "1.0.0",
+  "author": {
+    "name": "Harry Kapoor"
+  },
+  "homepage": "https://github.com/harrykapoor19/claude-skills",
+  "repository": "https://github.com/harrykapoor19/claude-skills",
+  "license": "MIT"
+}
