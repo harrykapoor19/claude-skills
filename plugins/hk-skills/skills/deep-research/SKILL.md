@@ -82,6 +82,8 @@ Based on the topic, select which sources are relevant:
 | **TikTok** | Consumer virality, non-tech audience crossover | Apify |
 | **Instagram** | Visual brands, D2C, lifestyle | Apify |
 | **YouTube** | Long-form analysis, tutorials, podcasts | yt-dlp for transcripts |
+| **Google Play Store** | App reviews — Android-heavy markets (India 95%+ Android); raw user voice, pain points, use cases, version-by-version sentiment | `npx google-play-scraper` (free, no API key) |
+| **Apple App Store** | App reviews — higher income demographic proxy (iPhone = ₹15L+ household in India); power user feedback | `npx app-store-scraper` (free, no API key) |
 | **IndieHackers** | Solo founder growth stories, revenue numbers | WebFetch |
 | **Product Hunt** | Product launches, user reactions, what hooks worked | WebFetch |
 | **GitHub** | Developer tools, open source virality, star velocity | GitHub API |
@@ -92,10 +94,44 @@ Based on the topic, select which sources are relevant:
 | **Wayback Machine** | How messaging/positioning evolved over time | web.archive.org API |
 | **Web (general)** | Blogs, articles, reports, analysis | WebSearch + WebFetch |
 
+### App Store / Play Store Commands
+
+```bash
+# Google Play — reviews for an app, filtered to India
+node -e "
+const gplay = require('google-play-scraper');
+gplay.reviews({ appId: 'APP_ID', country: 'in', lang: 'en', num: 200, sort: gplay.sort.NEWEST })
+  .then(r => r.data.forEach(v => console.log(JSON.stringify({score: v.score, text: v.text, date: v.date, version: v.version}))))
+  .catch(console.error);
+" 2>/dev/null || npx --yes google-play-scraper-cli reviews APP_ID --country in --num 200
+
+# Apple App Store — reviews for an app, India store
+node -e "
+const store = require('app-store-scraper');
+store.reviews({ id: 'ITUNES_APP_ID', country: 'in', page: 1 })
+  .then(r => r.forEach(v => console.log(JSON.stringify({score: v.score, text: v.text, date: v.date, version: v.version}))))
+  .catch(console.error);
+" 2>/dev/null
+```
+
+**Install once if needed:** `npm install -g google-play-scraper app-store-scraper`
+
+**Key app IDs for common research:**
+- ChatGPT Play Store: `com.openai.chatgpt` | App Store: `6448311069`
+- To find any app's ID: search on Play Store URL (`id=`) or App Store URL (last number segment)
+
+**What to extract from reviews:**
+- Use case patterns (what are people actually doing with the app?)
+- Pain points by star rating (1-2 star = unmet needs)
+- Language of review (Hindi/Hinglish = Tier 2-3 signal)
+- Version-specific complaints (feature regression detection)
+- Review volume over time (adoption curve proxy)
+
 **Selection rule:** For any topic, use at minimum: Twitter + Reddit + HN + Web. Add others based on topic type:
 - Market/growth topics → add LinkedIn, IndieHackers, Product Hunt, Google Trends, TikTok
 - Technical topics → add GitHub, Semantic Scholar, YouTube
-- Consumer/brand topics → add TikTok, Instagram, App Store reviews
+- Consumer/brand topics → add TikTok, Instagram, Google Play Store reviews, App Store reviews
+- Mobile product research → always add both app stores; Play Store = mass market signal, App Store = premium segment signal
 - Competitive intel → add Crunchbase, LinkedIn, Wayback Machine, Google Trends
 
 ---
