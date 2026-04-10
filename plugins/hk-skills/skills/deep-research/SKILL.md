@@ -320,7 +320,7 @@ Default: **standard**
 
 ## Quality Rules
 
-- **Every claim needs a source URL** — no exceptions
+- **Every claim needs a hyperlinked source** — no exceptions. In HTML output, all source references must be clickable `<a href="URL" target="_blank">` links — both inline citations in tables/text and in the Sources section. Never list a source name without its URL. In markdown output, use `[Source Name](URL)` format.
 - **Engagement-first mining** — on social platforms, filter by high engagement first, then assess relevance (don't keyword search)
 - **Recency bias check** — flag if best data is >1 year old
 - **Numbers need context** — raw numbers without comparison are meaningless
