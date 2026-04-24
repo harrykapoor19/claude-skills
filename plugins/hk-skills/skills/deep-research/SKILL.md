@@ -79,7 +79,7 @@ Based on the topic, select which sources are relevant:
 | **Reddit** | Community sentiment, practitioner experience, raw opinions | Reddit JSON API (free) |
 | **Hacker News** | Developer/tech sentiment, product launches, technical depth | Algolia HN API (free) |
 | **LinkedIn** | Operator playbooks, B2B insights, professional network | Apify |
-| **TikTok** | Consumer virality, non-tech audience crossover | Apify |
+| **TikTok** | Consumer virality, non-tech audience crossover, Gen-Z sentiment, viral demos/reactions, creator commentary | Apify (via `read-tiktok` skill — supports URL reads, hashtag scrapes, profile dumps, keyword search) |
 | **Instagram** | Visual brands, D2C, lifestyle | Apify |
 | **YouTube** | Long-form analysis, tutorials, podcasts | yt-dlp for transcripts |
 | **Google Play Store** | App reviews — Android-heavy markets (India 95%+ Android); raw user voice, pain points, use cases, version-by-version sentiment | `npx google-play-scraper` (free, no API key) |
@@ -127,12 +127,14 @@ store.reviews({ id: 'ITUNES_APP_ID', country: 'in', page: 1 })
 - Version-specific complaints (feature regression detection)
 - Review volume over time (adoption curve proxy)
 
-**Selection rule:** For any topic, use at minimum: Twitter + Reddit + HN + Web. Add others based on topic type:
-- Market/growth topics → add LinkedIn, IndieHackers, Product Hunt, Google Trends, TikTok
+**Selection rule:** For any topic, use at minimum: Twitter + Reddit + HN + TikTok + Web. TikTok is now a default source — Gen-Z and mainstream consumer sentiment increasingly surfaces there first, and skipping it misses signal. Add others based on topic type:
+- Market/growth topics → add LinkedIn, IndieHackers, Product Hunt, Google Trends
 - Technical topics → add GitHub, Semantic Scholar, YouTube
-- Consumer/brand topics → add TikTok, Instagram, Google Play Store reviews, App Store reviews
+- Consumer/brand topics → add Instagram, Google Play Store reviews, App Store reviews (TikTok already default)
 - Mobile product research → always add both app stores; Play Store = mass market signal, App Store = premium segment signal
 - Competitive intel → add Crunchbase, LinkedIn, Wayback Machine, Google Trends
+
+**TikTok access pattern:** Use the `read-tiktok` skill. Search by keyword (e.g. `"poke ai"`), by hashtag (e.g. `#pokeai`), or pass specific URLs. For engagement-first mining, sort by views/likes and filter to last 90 days. Look for: demo videos, reaction/review creators, "I tried X" content, and comment sections (often higher signal than the video itself).
 
 ---
 
