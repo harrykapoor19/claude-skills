@@ -84,6 +84,7 @@ Based on the topic, select which sources are relevant:
 | **YouTube** | Long-form analysis, tutorials, podcasts | yt-dlp for transcripts |
 | **Google Play Store** | App reviews — Android-heavy markets (India 95%+ Android); raw user voice, pain points, use cases, version-by-version sentiment | `npx google-play-scraper` (free, no API key) |
 | **Apple App Store** | App reviews — higher income demographic proxy (iPhone = ₹15L+ household in India); power user feedback | `npx app-store-scraper` (free, no API key) |
+| **SaaS review sites** | **Verbatim B2B/paid-software reviews — Trustpilot, G2, Capterra, SourceForge, TrustRadius, GetApp, ProductReview.com.au.** Densest source of paying-customer voice for non-app SaaS. Star-rating polarization (bimodal 5★/1★ = product-truth signal). | See "Review Site Access Patterns" below |
 | **IndieHackers** | Solo founder growth stories, revenue numbers | WebFetch |
 | **Product Hunt** | Product launches, user reactions, what hooks worked | WebFetch |
 | **GitHub** | Developer tools, open source virality, star velocity | GitHub API |
@@ -127,12 +128,33 @@ store.reviews({ id: 'ITUNES_APP_ID', country: 'in', page: 1 })
 - Version-specific complaints (feature regression detection)
 - Review volume over time (adoption curve proxy)
 
+### Review Site Access Patterns
+
+For B2B/SaaS/paid-software topics, review sites are the densest verbatim corpus. Always check star-rating distribution first — **bimodal 5★/1★ with no middle = product-truth signal** (polarization tells you the product works for some segments and fails for others).
+
+| Site | URL pattern | Access | Notes |
+|------|------------|--------|-------|
+| **Trustpilot** | `trustpilot.com/review/{domain}` | WebFetch (often 403); fallback: Apify `epctex/trustpilot-scraper` actor | Strong consumer-SaaS coverage, EU-heavy. Anti-bot is aggressive. |
+| **G2** | `g2.com/products/{slug}/reviews` | WebFetch + WebSearch `site:g2.com {product}` | B2B enterprise SaaS standard. Reviews are verified-employee-attached. |
+| **Capterra** | `capterra.com/p/{id}/{slug}/reviews/` | WebFetch | SMB SaaS. Owned by Gartner. |
+| **SourceForge** | `sourceforge.net/software/product/{slug}/` | WebFetch (loose anti-bot) | Strong dev-tools coverage. Often has 1/10-rated brutal reviews. |
+| **TrustRadius** | `trustradius.com/products/{slug}/reviews` | WebFetch | Mid-market B2B, longer-form reviews. |
+| **GetApp** | `getapp.com/{category}/a/{slug}/reviews/` | WebFetch | Mirrors Capterra; both Gartner-owned. |
+| **ProductReview** | `productreview.com.au/listings/{slug}` | WebFetch | Australia-specific, useful for AU SaaS plays. |
+
+**Extraction rules — verbatim or it doesn't count:**
+- Pull reviewer name (or `Anonymous`), star rating, date, full review text **with no edits**.
+- Capture the URL down to the review-anchor where possible (e.g. `#review-12345`).
+- Sample top 5–10 critical (1–2★) AND top 5–10 positive (4–5★) per site — the bimodal split is the insight.
+- If a site 403s (Trustpilot is the worst offender), fall back to **Apify** scrapers and confirm cost first per `~/.claude/CLAUDE.md` Paid API rules. As a last resort, WebSearch `site:trustpilot.com "{product name}"` to get indexed snippets.
+
 **Selection rule:** For any topic, use at minimum: Twitter + Reddit + HN + TikTok + Web. TikTok is now a default source — Gen-Z and mainstream consumer sentiment increasingly surfaces there first, and skipping it misses signal. Add others based on topic type:
 - Market/growth topics → add LinkedIn, IndieHackers, Product Hunt, Google Trends
 - Technical topics → add GitHub, Semantic Scholar, YouTube
 - Consumer/brand topics → add Instagram, Google Play Store reviews, App Store reviews (TikTok already default)
 - Mobile product research → always add both app stores; Play Store = mass market signal, App Store = premium segment signal
 - Competitive intel → add Crunchbase, LinkedIn, Wayback Machine, Google Trends
+- **B2B / SaaS / paid-software topics → ALWAYS add SaaS review sites** (Trustpilot, G2, Capterra, SourceForge, TrustRadius). Bimodal star-rating distribution is itself a finding.
 
 **TikTok access pattern:** Use the `read-tiktok` skill. Search by keyword (e.g. `"poke ai"`), by hashtag (e.g. `#pokeai`), or pass specific URLs. For engagement-first mining, sort by views/likes and filter to last 90 days. Look for: demo videos, reaction/review creators, "I tried X" content, and comment sections (often higher signal than the video itself).
 
