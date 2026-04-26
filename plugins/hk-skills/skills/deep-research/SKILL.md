@@ -93,6 +93,7 @@ Based on the topic, select which sources are relevant:
 | **Crunchbase** | Funding data, company growth signals | WebFetch |
 | **Semantic Scholar** | Academic research, theoretical foundations | API (free) |
 | **Wayback Machine** | How messaging/positioning evolved over time | web.archive.org API |
+| **Substack** | Long-form newsletter opinion, niche expert communities, monetized creator takes, thought leadership on any topic | Substack search (`substack.com/search?q=<topic>` → sort Top), per-newsletter top posts (`writer.substack.com/api/v1/posts?limit=50&sort=top_all_time` — no auth needed), Google `site:substack.com "<topic>"` sorted by PageRank, Apify for cross-newsletter scraping |
 | **Web (general)** | Blogs, articles, reports, analysis | WebSearch + WebFetch |
 
 ### App Store / Play Store Commands
@@ -155,6 +156,7 @@ For B2B/SaaS/paid-software topics, review sites are the densest verbatim corpus.
 - Mobile product research → always add both app stores; Play Store = mass market signal, App Store = premium segment signal
 - Competitive intel → add Crunchbase, LinkedIn, Wayback Machine, Google Trends
 - **B2B / SaaS / paid-software topics → ALWAYS add SaaS review sites** (Trustpilot, G2, Capterra, SourceForge, TrustRadius). Bimodal star-rating distribution is itself a finding.
+- **Thought leadership / opinion / trend topics → add Substack.** Pull top posts via the per-newsletter JSON API and Substack search. Cross-reference with Google `site:substack.com` to surface posts with high organic reach (PageRank = total audience signal, not just subscriber signal). Look for: which angles get most engagement, recurring thesis patterns, what the contrarian writers say.
 
 **TikTok access pattern:** Use the `read-tiktok` skill. Search by keyword (e.g. `"poke ai"`), by hashtag (e.g. `#pokeai`), or pass specific URLs. For engagement-first mining, sort by views/likes and filter to last 90 days. Look for: demo videos, reaction/review creators, "I tried X" content, and comment sections (often higher signal than the video itself).
 
@@ -209,6 +211,7 @@ Launch Agents (Opus, parallel) for:
    - Original source → who shared it → which community picked it up → did it cross platforms → what was the timeline
 4. **Temporal analysis** — overlay Google Trends data on top findings to see when they peaked and what triggered spikes
 5. **Influence tracing** — who are the key amplifiers for this topic? What's their incentive?
+6. **Voice mining** — for B2B/SaaS/consumer-product topics, launch a dedicated agent to pull verbatim quotes from review sites (G2, Trustpilot, Capterra, SourceForge, TrustRadius). Target: 25+ verbatims minimum, split ~50/50 positive (4-5★) vs critical (1-2★). Each verbatim must include: reviewer name or `Anonymous`, star rating, date, full unedited quote, source URL. No paraphrasing — if you can't get the exact text, skip it. Bimodal rating distribution (many 5★ + many 1★, few 3★) is itself a finding worth flagging.
 
 Each agent returns same structured format as Phase 1.
 
