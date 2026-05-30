@@ -7,7 +7,8 @@ cd "$(dirname "$0")"
 SKILLS_DIR="plugins/hk-skills/skills"
 SOURCE="$HOME/.claude/commands"
 
-for skill in deep-research creative-ideation; do
+for skill in deep-research deep-research-shared creative-ideation; do
+  mkdir -p "$SKILLS_DIR/$skill"
   cp -r "$SOURCE/$skill/." "$SKILLS_DIR/$skill/"
   echo "Synced $skill"
 done
